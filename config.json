@@ -1,0 +1,131 @@
+{
+	"name": "Requested and Required Fields",
+		"tt_name": "name",
+		"namespace": "INTERSECT\\RequestedAndRequiredFields",
+		"description": "Provides functionality for requesting a response to a field, and displays a warning to survey respondents if any requested fields are missing a value. For completeness, this module also allows required fields to be treated in the same way. Fields can be annotated with @REQUESTED or @REQUIRED, both of which take an optional description, which is shown to the user. If the description is omitted, the field label is shown instead.",
+		"tt_description": "description",
+		"framework-version": 14,
+		"authors": [
+			{
+				"name": "Aidan Wilson",
+				"email": "aidan.wilson@intersect.org.au",
+				"institution": "Intersect Australia"
+			}
+		],
+		"action-tags": [
+			{
+				"tag": "@REQUESTED", 
+				"description": "Displays a modal window if the annotated field is empty when the respondent attempts to submit, but allows the respondent to submit regardless (unless there are @REQUIRED fields). With a description provided by @REQUESTED=\"description\", the description is shown in the modal. Otherwise, the field label is shown."
+			},
+			{
+				"tag": "@REQUIRED", 
+				"description": "Displays a modal window if the annotated field is empty when the respondent attempts to submit, and prevents submission. With a description provided by @REQUIRED=\"description\", the description is shown in the modal. Otherwise, the field label is shown."
+			} 
+		],
+		"project-settings": [
+			{
+				"key": "modal-title",
+				"tt_name": "modal-title",
+				"name": "Modal title<br/>Title of window that pops up alerting the user to missing fields.<br/><em>Default: Action Required!</em>",
+				"type": "text"
+			},
+			{
+				"key": "modal-requested-header",
+				"tt_name": "modal-requested-header",
+				"name": "Requested text<br/><em>Default: The following fields are requested, although you may submit without completing them:</em>",
+				"type": "text"
+			},
+			{
+				"key": "modal-required-header",
+				"tt_name": "modal-required-header",
+				"name": "Required text<br/><em>Default: The following fields are required:</em>",
+				"type": "text"
+			},
+			{
+				"key": "modal-footer-norequired",
+				"tt_name": "modal-footer-norequired",
+				"name": "Footer text (no required fields)<br/><em>Default: Do you want to proceed with the submission?</em>",
+				"type": "text"
+			},
+			{
+				"key": "modal-footer-required",
+				"tt_name": "modal-footer-required",
+				"name": "Footer text (required fields)<br/><em>Default: You must complete all required fields before continuing.</em>",
+				"type": "text"
+			},
+			{
+				"key": "modal-cancel",
+				"tt_name": "modal-cancel",
+				"name": "Cancel button text<br/><em>Default: Review Response</em>",
+				"type": "text"
+			},
+			{
+				"key": "modal-submit",
+				"tt_name": "modal-submit",
+				"name": "Submit button text<br/><em>Default: Submit Now</em>",
+				"type": "text"
+			},
+			{
+				"key": "highlight",
+				"tt_name": "highlight",
+				"name": "Highlight fields after displaying warning?",
+				"type": "checkbox"
+			},
+			{
+				"key": "requested-hlcolour",
+				"tt_name": "requested-hlcolour",
+				"name": "Highlight colour for requested fields<br/><em>Default: light blue</em>",
+				"branchingLogic": {
+					"field": "highlight",
+					"value": true
+				},
+				"type": "color-picker"
+			},
+			{
+				"key": "required-hlcolour",
+				"tt_name": "required-hlcolour",
+				"name": "Highlight colour for required fields<br/><em>Default: light red</em>",
+				"branchingLogic": {
+					"field": "highlight",
+					"value": true
+				},
+				"type": "color-picker"
+			},
+			{
+				"key": "disable-greenhl",
+				"tt_name": "disable-greenhl",
+				"name": "Disable green highlight<br/><em>This can conflict visually with requested and required field highlighting</em>",
+				"branchingLogic": {
+					"field": "highlight",
+					"value": true
+				},
+				"type": "checkbox"
+			},
+			{
+				"key": "show-requested",
+				"tt-name": "show-requested",
+				"name": "Label requested fields",
+				"type": "checkbox"
+			},
+			{
+				"key": "requested-label",
+				"tt_name": "requested-label",
+				"name": "Requested field label text<br/><em>Default: * response requested</em>",
+				"branchingLogic": {
+					"field": "show-requested",
+					"value": true
+				},
+				"type": "text"
+			},
+			{
+				"key": "requested-label-colour",
+				"tt_name": "requested-label-colour",
+				"name": "Requested field label colour<br/><em>Default: blue</em>",
+				"branchingLogic": {
+					"field": "show-requested",
+					"value": true
+				},
+				"type": "color-picker"
+			}
+		]
+}

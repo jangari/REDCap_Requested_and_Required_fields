@@ -1,6 +1,7 @@
 <?php namespace INTERSECT\RequestedAndRequiredFields;
 
 use \REDCap as REDCap;
+use \Project as Project;
 use ExternalModules\AbstractExternalModule;
 
 class RequestedAndRequiredFields extends \ExternalModules\AbstractExternalModule {
@@ -15,36 +16,72 @@ class RequestedAndRequiredFields extends \ExternalModules\AbstractExternalModule
 
     function redcap_survey_page($project_id, $record, $instrument) {
 
+		// Collect project settings
+		$settings = $this->getProjectSettings();
+
 		// Get all annotated fields
         $requestedTag = "@REQUESTED";
         $requiredTag = "@REQUIRED";
 		$tags = array($requestedTag, $requiredTag);
         $annotatedFields = $this->getTags($tags, $fields=NULL, $instruments=$instrument);
 
-        // Extract field names and build the new structure, with fieldType and description (or label if unset in the tag)
+        // Extract field names and build the new structure, with fieldType and description (or label if not set in the tag)
         $requestedFields = [];
-        foreach (array_keys($annotatedFields[$requestedTag]) as $fieldName) {
+        if (!empty($annotatedFields[$requestedTag]) && is_array($annotatedFields[$requestedTag])) {
+            foreach (array_keys($annotatedFields[$requestedTag]) as $fieldName) {
                 $fieldType = REDCap::getFieldType($fieldName);
                 $description = trim($annotatedFields[$requestedTag][$fieldName][0], '"');
-				if (strlen($description) == 0) $description = $this->getFieldLabel($fieldName);
+                if (strlen($description) == 0) $description = $this->getFieldLabel($fieldName);
                 $requestedFields[$fieldName] = [
                     'type' => $fieldType,
                     'description' => $this->escape($description)
                 ];
+            };
         };
         $requiredFields = [];
-        foreach (array_keys($annotatedFields[$requiredTag]) as $fieldName) {
+        if (!empty($annotatedFields[$requiredTag]) && is_array($annotatedFields[$requiredTag])) {
+            foreach (array_keys($annotatedFields[$requiredTag]) as $fieldName) {
                 $fieldType = REDCap::getFieldType($fieldName);
                 $description = trim($annotatedFields[$requiredTag][$fieldName][0], '"');
 				if (strlen($description) == 0) $description = $this->getFieldLabel($fieldName);
                 $requiredFields[$fieldName] = [
                     'type' => $fieldType,
-                    'description' => $this->escape($description)
+                    'description' => strip_tags($description)
                 ];
+            };
         };
 
-		// Collect project settings
-		$settings = $this->getProjectSettings();
+        // Add fields marked as required in the metadata to the requiredFields array
+        if ($settings['designer-required'] == '1'){
+            $Proj = new Project($project_id);
+            // Loop through all fields in the current instrument
+            $instrumentFields = REDCap::getFieldNames($instrument=$instrument);
+            foreach ($instrumentFields as $this_field) {
+                // If the field is required AND it is not already in thr requiredFields array
+                if ($Proj->metadata[$this_field]['field_req'] == '1' && !array_key_exists($this_field, $requiredFields)){
+                    $fieldType = REDCap::getFieldType($this_field); // Get the type
+                    $description = $this->getFieldLabel($this_field); // Get the label
+                    $requiredFields[$this_field] = [
+                        'type' => $fieldType,
+                        'description' => strip_tags($description)
+                    ];
+                };
+            };
+        };
+
+        // Sort requiredFields by the order of the fields in the instrument, using the instrumentFields array from earlier
+        $requiredFieldsSorted = [];
+        foreach ($instrumentFields as $field) {
+            if (isset($requiredFields[$field])) {
+                $requiredFieldsSorted[$field] = $requiredFields[$field];
+            };
+        };
+        $requiredFields = $requiredFieldsSorted;
+
+        // Let's stop if both requestedFields and requiredFields are empty
+        if (empty($requestedFields) && empty($requiredFields)){
+            return;
+        };
 
 		// Language defaults
 		$settings['modal-title'] = $settings['modal-title'] ?? $this->tt('modal-title-text');

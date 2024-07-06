@@ -24,6 +24,12 @@
 		],
 		"project-settings": [
 			{
+				"key": "designer-required",
+				"tt_name": "designer-required",
+				"name": "Apply to fields marked as required in the project metadata?",
+				"type": "checkbox"
+			},
+			{
 				"key": "modal-title",
 				"tt_name": "modal-title",
 				"name": "Modal title<br/>Title of window that pops up alerting the user to missing fields.<br/><em>Default: Action Required!</em>",

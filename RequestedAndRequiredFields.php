@@ -67,16 +67,17 @@ class RequestedAndRequiredFields extends \ExternalModules\AbstractExternalModule
                     ];
                 };
             };
-        };
 
-        // Sort requiredFields by the order of the fields in the instrument, using the instrumentFields array from earlier
-        $requiredFieldsSorted = [];
-        foreach ($instrumentFields as $field) {
-            if (isset($requiredFields[$field])) {
-                $requiredFieldsSorted[$field] = $requiredFields[$field];
+            // Sort requiredFields by the order of the fields in the instrument, using the instrumentFields array from earlier
+            // This is not necessary unless we are only using fields marked @REQUIRED as they are retrieved in instrument order
+            $requiredFieldsSorted = [];
+            foreach ($instrumentFields as $field) {
+                if (isset($requiredFields[$field])) {
+                    $requiredFieldsSorted[$field] = $requiredFields[$field];
+                };
             };
+            $requiredFields = $requiredFieldsSorted;
         };
-        $requiredFields = $requiredFieldsSorted;
 
         // Let's stop if both requestedFields and requiredFields are empty
         if (empty($requestedFields) && empty($requiredFields)){

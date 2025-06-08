@@ -77,3 +77,4 @@ These instructions are also available in [GitHub](https://github.com/jangari/red
 | 1.0.0 | Initial release. | 
 | 1.1.0 | Added support for fields marked as required in the project metadata. Fixes PHP8.0 compatibility. |
 | 1.1.1 | Fixes a bug in which the module would not work with fields marked `@REQUIRED` if the option to also treat fields marked required in the metadata was not checked. |
+| 1.1.2 | Allows HTML to be safely inserted in action tags, and also allows HTML and rich text from field descriptions to be correctly output. |

@@ -34,7 +34,7 @@ class RequestedAndRequiredFields extends \ExternalModules\AbstractExternalModule
                 if (strlen($description) == 0) $description = $this->getFieldLabel($fieldName);
                 $requestedFields[$fieldName] = [
                     'type' => $fieldType,
-                    'description' => $this->escape($description)
+                    'description' => REDCap::filterHtml($description)
                 ];
             };
         };
@@ -46,7 +46,7 @@ class RequestedAndRequiredFields extends \ExternalModules\AbstractExternalModule
 				if (strlen($description) == 0) $description = $this->getFieldLabel($fieldName);
                 $requiredFields[$fieldName] = [
                     'type' => $fieldType,
-                    'description' => strip_tags($description)
+                    'description' => REDCap::filterHtml($description)
                 ];
             };
         };
@@ -63,7 +63,7 @@ class RequestedAndRequiredFields extends \ExternalModules\AbstractExternalModule
                     $description = $this->getFieldLabel($this_field); // Get the label
                     $requiredFields[$this_field] = [
                         'type' => $fieldType,
-                        'description' => strip_tags($description)
+                        'description' => REDCap::filterHtml($description)
                     ];
                 };
             };
@@ -188,7 +188,7 @@ class RequestedAndRequiredFields extends \ExternalModules\AbstractExternalModule
 						// Loop through the descriptions and create <li> elements
 						emptyRequested.forEach(function(description) {
 							var li = document.createElement('li');
-							li.textContent = description;
+							li.innerHTML = description;
 							requestedUl.appendChild(li);
 						});
 						document.getElementById('requested-list').appendChild(requestedUl);
@@ -205,7 +205,7 @@ class RequestedAndRequiredFields extends \ExternalModules\AbstractExternalModule
 						// Loop through the descriptions and create <li> elements
 						emptyRequired.forEach(function(description) {
 							var li = document.createElement('li');
-							li.textContent = description;
+							li.innerHTML = description;
 							requiredUl.appendChild(li);
 						});
 						document.getElementById('required-list').appendChild(requiredUl);
